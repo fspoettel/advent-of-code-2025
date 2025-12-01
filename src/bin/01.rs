@@ -1,41 +1,31 @@
 advent_of_code::solution!(1);
 
-fn parse_line(l: &str) -> i64 {
+fn parse_line(l: &str) -> Option<i32> {
     let parts = l.split_at(1);
-
-    let coeff = match parts.0 {
-        "L" => -1,
-        _ => 1,
-    };
-
-    let steps: i64 = parts.1.parse().unwrap();
-    coeff * steps
+    let coeff = if parts.0 == "L" { -1 } else { 1 };
+    parts.1.parse::<i32>().map(|val| val * coeff).ok()
 }
 
-pub fn part_one(input: &str) -> Option<i64> {
+pub fn part_one(input: &str) -> Option<i32> {
     let mut clicks = 0;
     let mut val = 50;
 
-    for line in input.lines().filter(|line| !line.is_empty()) {
-        let diff = parse_line(line);
+    input.lines().filter_map(parse_line).for_each(|diff| {
         val = (val + diff).rem_euclid(100);
         if val == 0 {
             clicks += 1;
         }
-    }
+    });
 
     Some(clicks)
 }
 
-pub fn part_two(input: &str) -> Option<i64> {
+pub fn part_two(input: &str) -> Option<i32> {
     let mut clicks = 0;
-    let mut val: i64 = 50;
+    let mut val: i32 = 50;
 
-    for line in input.lines().filter(|line| !line.is_empty()) {
-        let diff = parse_line(line);
-        let is_left = diff.is_negative();
-
-        let target: i64 = if is_left {
+    input.lines().filter_map(parse_line).for_each(|diff| {
+        let target: i32 = if diff.is_negative() {
             if val == 0 { 100 } else { 0 }
         } else {
             100
@@ -50,7 +40,7 @@ pub fn part_two(input: &str) -> Option<i64> {
         }
 
         val = (val + diff).rem_euclid(100);
-    }
+    });
 
     Some(clicks)
 }
