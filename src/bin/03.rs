@@ -13,9 +13,10 @@ fn solve(input: &str, size: usize) -> u64 {
         .lines()
         .map(|l| {
             let battery: Vec<u8> = l
-                .chars()
-                .filter_map(|c| c.to_digit(10).and_then(|d| d.try_into().ok()))
-                .collect();
+                .as_bytes()
+                .iter()
+                .map(|c| c - b'0')
+                .collect::<Vec<_>>();
 
             switch_battery(&battery, size)
         })
