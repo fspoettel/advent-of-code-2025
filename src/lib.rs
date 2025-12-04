@@ -1,3 +1,5 @@
+use itertools::Itertools;
+
 pub mod template;
 
 // Use this file to add helper functions and additional modules.
@@ -91,6 +93,15 @@ impl<T: Copy> Grid<T> {
         self.cells[point.y as usize][point.x as usize]
     }
 
+    pub fn all_points(&self) -> impl Iterator<Item = Point> {
+        (0..self.rows)
+            .cartesian_product(0..self.cols)
+            .map(|(y, x)| Point {
+                x: x as isize,
+                y: y as isize,
+            })
+    }
+
     pub fn point_inside(&self, point: &Point) -> bool {
         point.x >= 0 && point.x < self.cols as isize && point.y >= 0 && point.y < self.rows as isize
     }
@@ -103,6 +114,12 @@ impl<T: Copy> Grid<T> {
         } else {
             None
         }
+    }
+
+    pub fn neighbors_all(&self, point: &Point) -> impl Iterator<Item = Point> {
+        ALL_DIRECTIONS
+            .iter()
+            .filter_map(move |dir| self.neighbor(&point, dir))
     }
 }
 

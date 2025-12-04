@@ -1,5 +1,4 @@
-use advent_of_code::{ALL_DIRECTIONS, Grid, Point};
-use itertools::Itertools;
+use advent_of_code::Grid;
 
 advent_of_code::solution!(4);
 
@@ -41,28 +40,20 @@ fn transform(grid: &Grid<bool>) -> (Grid<bool>, u32) {
 
     let mut next_grid: Vec<Vec<bool>> = grid.cells.clone();
 
-    for (y, x) in (0..grid.rows).cartesian_product(0..grid.cols) {
-        let point = Point {
-            x: x as isize,
-            y: y as isize,
-        };
-
+    grid.all_points().for_each(|point| {
         let removed = grid.get(&point)
-            && ALL_DIRECTIONS
-                .iter()
-                .filter(|dir| {
-                    grid.neighbor(&point, dir)
-                        .map(|n| grid.get(&n))
-                        .unwrap_or(false)
-                })
+            && grid
+                .neighbors_all(&point)
+                .into_iter()
+                .filter(|p| grid.get(p))
                 .count()
                 < 4;
 
         if removed {
             remove_count += 1;
-            next_grid[y][x] = false;
+            next_grid[point.y as usize][point.x as usize] = false;
         }
-    }
+    });
 
     (Grid::from(next_grid), remove_count)
 }
