@@ -119,7 +119,7 @@ impl<T: Copy> Grid<T> {
     pub fn neighbors_all(&self, point: &Point) -> impl Iterator<Item = Point> {
         ALL_DIRECTIONS
             .iter()
-            .filter_map(move |dir| self.neighbor(&point, dir))
+            .filter_map(move |dir| self.neighbor(point, dir))
     }
 }
 

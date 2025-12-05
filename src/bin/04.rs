@@ -44,7 +44,6 @@ fn transform(grid: &Grid<bool>) -> (Grid<bool>, u32) {
         let removed = grid.get(&point)
             && grid
                 .neighbors_all(&point)
-                .into_iter()
                 .filter(|p| grid.get(p))
                 .count()
                 < 4;
