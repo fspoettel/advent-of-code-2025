@@ -1,7 +1,7 @@
 advent_of_code::solution!(6);
 
 fn parse(input: &str) -> Vec<Vec<String>> {
-    let rows: Vec<Vec<char>> = input
+    let grid: Vec<Vec<char>> = input
         .lines()
         .filter(|l| !l.is_empty())
         .map(|l| l.chars().collect())
@@ -10,11 +10,11 @@ fn parse(input: &str) -> Vec<Vec<String>> {
     let mut eqs: Vec<Vec<String>> = vec![];
     let mut curr = 0;
 
-    let w = rows[0].len();
-    let h = rows.len();
+    let w = grid[0].len();
+    let h = grid.len();
 
     (0..w).for_each(|x| {
-        let column = (0..h).map(|y| rows[y][x]);
+        let column = (0..h).map(|y| grid[y][x]);
 
         if column.clone().any(|x| x != ' ') {
             if curr >= eqs.len() {
@@ -36,7 +36,7 @@ fn parse(input: &str) -> Vec<Vec<String>> {
 fn eval<'a, 'b>(op: &'a str, values: impl Iterator<Item = &'b String>) -> Option<u64> {
     let values = values.filter_map(|v| v.trim().parse::<u64>().ok());
     match op.trim() {
-        "*" => Some(values.product::<u64>()),
+        "*" => Some(values.product()),
         "+" => Some(values.sum()),
         _ => unreachable!()
     }
